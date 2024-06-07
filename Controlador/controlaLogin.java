@@ -8,13 +8,36 @@ import java.util.Scanner;
 public class controlaLogin {
     //atributos de la clase controlaLogin
     private usuario usuario;
+    private int contador = 0;    
 
-    
     //constructor de la clase controlaLogin
-    public controlaLogin(String nombreUsuario, String contrasena){
-        this.usuario = new usuario(nombreUsuario, contrasena);
+    public controlaLogin(){
+        usuario = new usuario("","");
     }
-    
+
+    public void AccesoSistema(){
+        Scanner lector = new Scanner(System.in);
+        while(contador<=5){
+
+            System.out.println("Ingresa usuario:");
+            usuario.setNombreUsuario(lector.nextLine());
+            System.out.println("Ingresa contraseña:");
+            usuario.setContrasena(lector.nextLine());
+
+            if (ValidarUsuario()) {
+                System.out.println( "Usuario validado correctamente");
+                return;
+            } else {
+                contador++;
+                System.out.println("Usuario no validado");
+            }
+        }
+        System.out.println( "Usuario bloqueado");
+        return;
+    }
+
+
+
     //metodo para validar el usuario
     public boolean ValidarUsuario() {
         File archivo = new File("usuarios.txt");
@@ -23,14 +46,13 @@ public class controlaLogin {
             while (sc.hasNextLine()) {
                 String linea = sc.nextLine();
                 String[] partes = linea.split(",");
-                System.out.println("Usuario:"+usuario.getNombreUsuario());
-                System.out.println("Clave:"+usuario.getContrasena());
-                if (partes[0].equals("usuario:"+usuario.getNombreUsuario()) && 
-                partes[1].equals("clave:"+usuario.getContrasena())) {
+                
+                if (partes[0].equals("Usuario:"+usuario.getNombreUsuario()) && 
+                partes[1].equals("Clave:"+usuario.getContrasena())) {
                     return true;
                 }
             }
-            sc.close();
+            
             return false;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
