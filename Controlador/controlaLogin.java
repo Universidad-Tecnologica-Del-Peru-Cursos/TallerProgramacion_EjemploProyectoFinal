@@ -1,28 +1,42 @@
 package Controlador;
 
 import Modelo.usuario;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class controlaLogin {
     //atributos de la clase controlaLogin
     private usuario usuario;
-    private String nombreUsuario;
-    private String contrasena;
+
     
     //constructor de la clase controlaLogin
     public controlaLogin(String nombreUsuario, String contrasena){
-        this.nombreUsuario = nombreUsuario;
-        this.contrasena = contrasena;
+        this.usuario = new usuario(nombreUsuario, contrasena);
     }
     
     //metodo para validar el usuario
-    public boolean validarUsuario(){
-        //se crea un objeto de la clase usuario
-        usuario = new usuario(nombreUsuario, contrasena);
-        //se valida el usuario
-        if(usuario.getNombreUsuario().equals("admin") && usuario.getContrasena().equals("admin")){
-            return true;
-        }else{
+    public boolean ValidarUsuario() {
+        File archivo = new File("usuarios.txt");
+        try {
+            Scanner sc = new Scanner(archivo);
+            while (sc.hasNextLine()) {
+                String linea = sc.nextLine();
+                String[] partes = linea.split(",");
+                System.out.println("Usuario:"+usuario.getNombreUsuario());
+                System.out.println("Clave:"+usuario.getContrasena());
+                if (partes[0].equals("usuario:"+usuario.getNombreUsuario()) && 
+                partes[1].equals("clave:"+usuario.getContrasena())) {
+                    return true;
+                }
+            }
+            sc.close();
+            return false;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
             return false;
         }
     }
+
+
 }
