@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import Modelo.Errores;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ControladorLogin {
     // Número máximo de intentos permitidos para ingresar al sistema
@@ -55,6 +58,12 @@ public class ControladorLogin {
             // Si se excede el número máximo de intentos, se notifica al usuario que ha sido bloqueado
             System.out.println("Usuario bloqueado");
             System.out.println("********************************************");
+        }  catch (Exception e) {
+            // Manejar la excepción en caso de error
+            System.err.println("Error al leer la entrada del usuario: " + e.getMessage());
+            Errores error = new Errores(e.getMessage(), "Error", 
+            LocalDate.now().toString(), LocalTime.now().toString(), "Usuario");
+            ControladorErrores.guardarError(error);
         }
     }
 
@@ -79,7 +88,10 @@ public class ControladorLogin {
             return false;
         } catch (IOException e) {
             // Manejar la excepción si ocurre un error al leer el archivo y notificar al usuario
-            System.err.println("Error al leer el archivo de usuarios: " + e.getMessage());
+            System.err.println("Error al leer la entrada del usuario: " + e.getMessage());
+            Errores error = new Errores(e.getMessage(), "Error", 
+            LocalDate.now().toString(), LocalTime.now().toString(), "Usuario");
+            ControladorErrores.guardarError(error);
             return false;
         }
     }
